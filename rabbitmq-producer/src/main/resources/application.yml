@@ -1,0 +1,33 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: rabbitmq-producer
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin
+    virtualHost: /consumer
+    #这个配置是保证提供者确保消息推送到交换机中，不管成不成功，都会回调
+    publisher-confirm-type: correlated
+    #保证交换机能把消息推送到队列中
+    publisher-returns: true
+    template:
+      mandatory: true
+    modules:
+      - enabled: true
+        type: DIRECT
+        exchange:
+          name: direct-exchange
+        queues:
+          - name: direct-queue1
+            durable: true
+            exclusive: false
+            autoDelete: false
+            routing-key: direct-routing-key1
+          - name: direct-queue2
+            durable: true
+            exclusive: false
+            autoDelete: false
+            routing-key: direct-routing-key2
